@@ -44,7 +44,9 @@ export default function ProductPage() {
         <Grid item md={3} xs={12}>
           <List>
             <ListItem>
-              <Typography component="h1"> {product.name}</Typography>
+              <Typography component="h1" variant="h1">
+                {product.name}
+              </Typography>
             </ListItem>
             <ListItem>
               <Typography>Category: {product.category}</Typography>
@@ -83,7 +85,6 @@ export default function ProductPage() {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>
-                      {' '}
                       {product.countInStock > 0 ? 'In Stock' : 'Unavailable'}
                     </Typography>
                   </Grid>

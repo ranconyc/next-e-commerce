@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Container,
+  Typography,
+  Link,
+} from '@material-ui/core';
 import Head from 'next/head';
-import { AppBar, Toolbar, Container, Typography } from '@material-ui/core';
+import NextLink from 'next/link';
 import useStyles from '../utils/styles';
 
 export default function Layout({ children, ...props }) {
-  const [appName, setAppName] = useState('Next e-commerce');
+  const [appName, setAppName] = useState('Rancommerce');
   const classes = useStyles();
   return (
     <div>
@@ -13,7 +20,18 @@ export default function Layout({ children, ...props }) {
       </Head>
       <AppBar position="static" className={classes.navbar}>
         <Toolbar>
-          <Typography>{appName}</Typography>
+          <NextLink href="/" passHref>
+            <Link>
+              <Typography className={classes.brand}>{appName}</Typography>
+            </Link>
+          </NextLink>
+          <div className={classes.grow}></div>
+          <NextLink href="/cart" passHref>
+            <Link>cart</Link>
+          </NextLink>
+          <NextLink href="/login" passHref>
+            <Link>login</Link>
+          </NextLink>
         </Toolbar>
       </AppBar>
       <Container className={classes.main}>{children}</Container>

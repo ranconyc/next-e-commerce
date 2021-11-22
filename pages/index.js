@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
+import NextLink from 'next/link';
 import Layout from '../components/Layout';
 import data from '../utils/data';
 

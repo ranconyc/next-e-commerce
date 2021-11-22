@@ -10,13 +10,14 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import useStyles from '../utils/styles';
 
-export default function Layout({ children, ...props }) {
+export default function Layout({ children, description, title, ...props }) {
   const [appName, setAppName] = useState('Rancommerce');
   const classes = useStyles();
   return (
     <div>
       <Head>
-        <title>{appName}</title>
+        <title>{title ? `${title} - ${appName}` : `${appName}`}</title>
+        {description && <meta name="description" content={description}></meta>}
       </Head>
       <AppBar position="static" className={classes.navbar}>
         <Toolbar>

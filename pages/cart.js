@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import {
   Button,
@@ -24,6 +25,7 @@ import { Store } from '../utils/store';
 import axios from 'axios';
 
 function CartPage() {
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
@@ -46,6 +48,10 @@ function CartPage() {
       type: 'CART_REMOVE_ITEM',
       payload: item,
     });
+  };
+
+  const checkOutHandler = () => {
+    router.push('/shipping');
   };
 
   return (
@@ -137,7 +143,12 @@ function CartPage() {
                 </ListItem>
               </List>
 
-              <Button fullWidth variant="contained" color="primary">
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={checkOutHandler}
+              >
                 Check out
               </Button>
             </Card>
@@ -148,4 +159,5 @@ function CartPage() {
   );
 }
 
+// eslint-disable-next-line no-undef
 export default dynamic(() => Promise.resolve(CartPage), { ssr: false });

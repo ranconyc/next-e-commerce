@@ -10,16 +10,13 @@ import {
   ListItem,
   Typography,
 } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import data from '../../utils/data';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
+import db from '../../utils/db';
+import Product from '../../models/Product';
 
-export default function ProductPage() {
+export default function ProductPage({ product }) {
   const classes = useStyles();
-  const router = useRouter();
-  const { slug } = router.query;
-  const product = data.products.find((p) => p.slug === slug);
 
   if (!product) return <div>Product Not Found</div>;
 
@@ -101,4 +98,13 @@ export default function ProductPage() {
       </Grid>
     </Layout>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  const { slug } = ctx.params;
+  await db.connect();
+  const product = await Product.findOne({ slug }).lean();
+  await db.disconnect();
+
+  return { props: { product: db.convertDocToObj(product) } };
 }

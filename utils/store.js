@@ -31,6 +31,8 @@ function reducer(state, action) {
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    case 'CART_CHANGE_QUANTITY': {
+    }
     default:
       return state;
   }

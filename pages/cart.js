@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import {
   Button,
@@ -20,26 +21,35 @@ import {
   ListItem,
 } from '@material-ui/core';
 import { Store } from '../utils/store';
-// import db from '../utils/db';
-// import axios from 'axios';
+import axios from 'axios';
 
-export default function Cart() {
+function CartPage() {
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
 
-  const quantityChangeHandler = (e) => {
-    const { name, value } = e.target;
-    console.log({ name, value });
-    // in cart items update the quantity to the new value
-    // dispatch({ type: 'CART_CHANGE_QUANTITY', payload:  });
+  const updateCartHandler = async (item, quantity) => {
+    const { data } = await axios.get(`/api/products/${item._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...item, quantity },
+    });
   };
 
-  const deleteItemHandler = () => {};
+  const removeItemHandler = (item) => {
+    dispatch({
+      type: 'CART_REMOVE_ITEM',
+      payload: item,
+    });
+  };
 
   return (
-    <Layout title="Shooping Cart">
+    <Layout title="Shopping Cart">
       <Typography component="h1" variant="h1">
         Shopping Cart
       </Typography>
@@ -88,7 +98,9 @@ export default function Cart() {
                         <Select
                           value={item.quantity}
                           name={item.name}
-                          onChange={quantityChangeHandler}
+                          onChange={(e) =>
+                            updateCartHandler(item, e.target.value)
+                          }
                         >
                           {[...Array(item.countInStock).keys()].map((x) => (
                             <MenuItem key={x + 1} value={x + 1}>
@@ -102,7 +114,7 @@ export default function Cart() {
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={deleteItemHandler}
+                          onClick={() => removeItemHandler(item)}
                         >
                           X
                         </Button>
@@ -135,3 +147,5 @@ export default function Cart() {
     </Layout>
   );
 }
+
+export default dynamic(() => Promise.resolve(CartPage), { ssr: false });

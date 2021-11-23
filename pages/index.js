@@ -13,9 +13,8 @@ import NextLink from 'next/link';
 import Layout from '../components/Layout';
 import db from '../utils/db';
 import Product from '../models/product';
-import Axios from 'axios';
 
-export default function Home({ products, ...props }) {
+export default function Home({ products }) {
   return (
     <Layout>
       <div>

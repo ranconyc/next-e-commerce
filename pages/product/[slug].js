@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import {
@@ -12,11 +12,26 @@ import {
 } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
+import { Store } from '../../utils/store';
 import db from '../../utils/db';
 import Product from '../../models/Product';
+import axios from 'axios';
 
 export default function ProductPage({ product }) {
+  const { dispatch } = useContext(Store);
   const classes = useStyles();
+
+  const addToCartHandler = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock <= 0) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...product, quantity: 1 },
+    });
+  };
 
   if (!product) return <div>Product Not Found</div>;
 
@@ -88,7 +103,12 @@ export default function ProductPage({ product }) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button fullWidth variant="contained" color="primary">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={addToCartHandler}
+                >
                   Add to cart
                 </Button>
               </ListItem>

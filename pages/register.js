@@ -15,10 +15,10 @@ import {
 } from '@material-ui/core';
 import Cookies from 'js-cookie';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const classes = useStyles();
   const router = useRouter();
-  const { redirect } = router.query; // login?redirect
+  const { redirect } = router.query;
   const {
     state: { userInfo },
     dispatch,
@@ -30,13 +30,19 @@ export default function LoginPage() {
     }
   }, []);
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Password don't match");
+    }
     try {
-      const { data } = await axios.post('/api/users/login', {
+      const { data } = await axios.post('/api/users/register', {
+        name,
         email,
         password,
       });
@@ -49,18 +55,29 @@ export default function LoginPage() {
   };
 
   return (
-    <Layout title="login">
+    <Layout title="Register">
       <form className={classes.form} onSubmit={submitHandler}>
         <Typography component="h1" variant="h1">
-          Login
+          Register
         </Typography>
         <List>
           <ListItem>
             <TextField
               variant="outlined"
               fullWidth
+              id="name"
+              label="name"
+              inputProps={{ type: 'name' }}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            ></TextField>
+          </ListItem>
+          <ListItem>
+            <TextField
+              variant="outlined"
+              fullWidth
               id="email"
-              label="Email"
+              label="email"
               inputProps={{ type: 'email' }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -71,20 +88,31 @@ export default function LoginPage() {
               variant="outlined"
               fullWidth
               id="password"
-              label="Password"
+              label="password"
               inputProps={{ type: 'password' }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></TextField>
           </ListItem>
           <ListItem>
+            <TextField
+              variant="outlined"
+              fullWidth
+              id="confirmPassword"
+              label="confirmPassword"
+              inputProps={{ type: 'confirmPassword' }}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            ></TextField>
+          </ListItem>
+          <ListItem>
             <Button variant="contained" fullWidth type="submit" color="primary">
-              Login
+              Register
             </Button>
           </ListItem>
-          {"Don't have an account? "}
-          <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
-            <Link>Register</Link>
+          Already have an account?{' '}
+          <NextLink href={`/login?redirect=${redirect || '/'}`} passHref>
+            <Link>Login</Link>
           </NextLink>
         </List>
       </form>
